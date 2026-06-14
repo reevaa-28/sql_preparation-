@@ -105,4 +105,212 @@ SELECT *
 FROM employees
 WHERE emp_name LIKE 'P%a';
 
+use erp;
+SELECT dept_id,
+       COUNT(*) AS EmployeeCount
+FROM employees
+GROUP BY dept_id;
+
+SELECT dept_id,
+       AVG(salary) AS AvgSalary
+FROM employees
+GROUP BY dept_id;
+
+SELECT dept_id,
+       SUM(salary) AS TotalSalary
+FROM employees
+GROUP BY dept_id;
+
+SELECT dept_id,
+       AVG(salary) AS AvgSalary
+FROM employees
+GROUP BY dept_id
+HAVING AVG(salary) > 55000;
+
+SELECT dept_id,
+       SUM(salary) AS TotalSalary
+FROM employees
+GROUP BY dept_id
+HAVING SUM(salary) > 300000;
+
+SELECT d.dept_name,
+       COUNT(*) AS EmployeeCount
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+GROUP BY d.dept_name;
+
+
+SELECT d.dept_name,
+       AVG(e.salary) AS AvgSalary
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+GROUP BY d.dept_name;
+
+SELECT d.dept_name,
+       AVG(e.salary) AS AvgSalary
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+GROUP BY d.dept_name;
+
+SELECT d.dept_name,
+       MAX(e.salary) AS HighestSalary
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+GROUP BY d.dept_name;
+
+SELECT MAX(salary) AS SecondHighestSalary
+FROM employees
+WHERE salary <
+(
+    SELECT MAX(salary)
+    FROM employees
+);
+
+SELECT MAX(salary) - MIN(salary) AS SalaryDifference
+FROM employees;
+SELECT e.emp_id,
+       e.emp_name,
+       e.salary,
+       d.dept_name
+FROM employees e
+INNER JOIN departments d
+ON e.dept_id = d.dept_id;
+
+SELECT e.emp_name,
+       d.dept_name
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+WHERE d.dept_name = 'IT';
+
+SELECT e.emp_name,
+       d.dept_name
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+WHERE d.dept_name = 'HR';
+
+SELECT e.emp_name,
+       e.salary,
+       d.dept_name
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+WHERE e.salary > 60000;
+
+SELECT *
+FROM employees
+WHERE salary >
+(
+    SELECT AVG(salary)
+    FROM employees
+);
+
+SELECT *
+FROM employees
+WHERE salary =
+(
+    SELECT MAX(salary)
+    FROM employees
+);
+
+SELECT MAX(salary) AS SecondHighestSalary
+FROM employees
+WHERE salary <
+(
+    SELECT MAX(salary)
+    FROM employees
+);
+
+SELECT *
+FROM employees e
+WHERE salary >
+(
+    SELECT AVG(salary)
+    FROM employees
+    WHERE dept_id = e.dept_id
+);
+
+SELECT e.emp_name,
+       e.salary,
+       d.dept_name
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+WHERE e.salary =
+(
+    SELECT MAX(salary)
+    FROM employees
+);
+
+SELECT e.emp_name,
+       e.salary,
+       d.dept_name
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id
+WHERE (e.dept_id, e.salary) IN
+(
+    SELECT dept_id,
+           MAX(salary)
+    FROM employees
+    GROUP BY dept_id
+);
+
+SELECT emp_name
+FROM employees
+WHERE dept_id = 101
+
+UNION
+
+SELECT emp_name
+FROM employees
+WHERE salary > 60000;
+
+SELECT emp_name
+FROM employees
+WHERE dept_id = 101
+
+UNION ALL
+
+SELECT emp_name
+FROM employees
+WHERE salary > 60000;
+
+SELECT *
+FROM employees
+WHERE dept_id = 101
+AND salary > 60000;
+
+SELECT e.*
+FROM employees e
+INNER JOIN
+(
+    SELECT emp_id
+    FROM employees
+    WHERE dept_id = 101
+) a
+ON e.emp_id = a.emp_id
+INNER JOIN
+(
+    SELECT emp_id
+    FROM employees
+    WHERE salary > 60000
+) b
+ON e.emp_id = b.emp_id;
+
+SELECT emp_name, dept_id
+FROM employees
+WHERE dept_id = 101
+
+UNION
+
+SELECT emp_name, dept_id
+FROM employees
+WHERE dept_id = 102;
+
 
