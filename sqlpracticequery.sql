@@ -313,4 +313,90 @@ SELECT emp_name, dept_id
 FROM employees
 WHERE dept_id = 102;
 
+CREATE VIEW employee_details AS
+SELECT e.emp_id,
+       e.emp_name,
+       e.salary,
+       d.dept_name
+FROM employees e
+JOIN departments d
+ON e.dept_id = d.dept_id;
 
+SELECT * FROM employee_details;
+
+DROP VIEW employee_details;
+
+CREATE INDEX idx_salary
+ON employees(salary);
+
+SHOW INDEX FROM employees;
+
+DROP INDEX idx_salary
+ON employees;
+
+DELIMITER //
+
+CREATE PROCEDURE ShowEmployees()
+BEGIN
+    SELECT * FROM employees;
+END //
+
+DELIMITER ;
+
+CALL ShowEmployees();
+
+CREATE TABLE employee_log(
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DELIMITER //
+
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employee_log(emp_name)
+    VALUES(NEW.emp_name);
+END //
+
+DELIMITER ;
+
+SELECT emp_name,
+       salary,
+       ROW_NUMBER() OVER(ORDER BY salary DESC) AS RowNum
+FROM employees;
+
+SELECT emp_name,
+       salary,
+       DENSE_RANK() OVER(ORDER BY salary DESC) AS DenseRank
+FROM employees;
+
+SELECT emp_name,
+       salary,
+       CASE
+           WHEN salary >= 60000 THEN 'High'
+           WHEN salary >= 50000 THEN 'Medium'
+           ELSE 'Low'
+       END AS SalaryCategory
+FROM employees;
+
+SELECT *
+FROM departments d
+WHERE EXISTS
+(
+    SELECT *
+    FROM employees e
+    WHERE e.dept_id = d.dept_id
+);
+
+START TRANSACTION;
+
+UPDATE employees
+SET salary = salary + 5000
+WHERE emp_id = 1;
+
+COMMIT;
+
+ROLLBACK;
